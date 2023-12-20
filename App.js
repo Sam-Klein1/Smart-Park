@@ -22,7 +22,7 @@ function MyTabs() {
 
           if (route.name === 'Home') {
             iconName = 'local-parking'; // Change this to the actual name of your home icon
-          } 
+          }
           else if (route.name === 'Lots') {
             iconName = 'format-list-bulleted'; // Change this to the actual name of your settings icon
           }
@@ -33,7 +33,8 @@ function MyTabs() {
           // You can return any component here, not just icons
           return <Icon name={iconName} size={30} color={color} />;
         },
-        tabBarShowLabel: false
+        tabBarShowLabel: false,
+        // headerShown: false, //if we wanna remove the header
       })}
     >
 
