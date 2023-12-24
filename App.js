@@ -8,10 +8,14 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Home from './src/screens/Home';
 import Lots from './src/screens/Lots';
 import Settings from './src/screens/Settings'
+import { useState } from 'react';
 
 const Tab = createBottomTabNavigator();
 
 function MyTabs() {
+
+  const [activeLot, setActiveLot] = useState(null)
+
   return (
 
     //weird bs for the icons
@@ -31,16 +35,23 @@ function MyTabs() {
           }
 
           // You can return any component here, not just icons
-          return <Icon name={iconName} size={30} color={color} />;
+          return <Icon name={iconName} size={40} color={color} />;
         },
         tabBarShowLabel: false,
         // headerShown: false, //if we wanna remove the header
+        // headerTransparent: true,
       })}
     >
 
       {/* Actual tabs */}
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Lots" component={Lots} />
+      <Tab.Screen
+        name="Home"
+        children={() => <Home activeLot={activeLot} setActiveLot={setActiveLot} />}
+      />
+      <Tab.Screen 
+        name="Lots" 
+        children={() => <Lots activeLot={activeLot} setActiveLot={setActiveLot} />} 
+      />
       <Tab.Screen name="Settings" component={Settings} />
 
 

@@ -14,11 +14,16 @@ export default function SearchBar({
   setIsSuggestionsVisible,
   mylots,
   setlots,
+  setActiveLot,
 }) {
   const [parkingLots, setParkingLots] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredParkingLots, setFilteredParkingLots] = useState([]);
-  const [selectedLot, setSelectedLot] = useState<{id: Number, name: String, location: String}>(null);
+  const [selectedLot, setSelectedLot] = useState({
+    id: null,
+    name: "",
+    location: "",
+  }); // Initialize with an empty object
 
   useEffect(() => {
     const fetchParkingLots = async () => {
@@ -54,13 +59,21 @@ export default function SearchBar({
   };
 
   const addLot = async () => {
-    //Retrieve existing parking lots from AsyncStorage
     try {
+      // Check if the selected lot exists in the database
+      const doesLotExist = parkingLots.some(
+        (lot) => lot?.id === selectedLot.id
+      );
 
-      const isDuplicateLot = mylots.some((lot) => lot.id === selectedLot.id);
+      if (!doesLotExist) {
+        console.log("Parking lot does not exist in the database.");
+        return; // Do not add the lot if it doesn't exist in the database
+      }
+
+      const isDuplicateLot = mylots.some((lot) => lot?.id === selectedLot.id);
 
       if (isDuplicateLot) {
-        console.log('Parking lot with the same ID already exists.');
+        console.log("Parking lot with the same ID already exists.");
         return; // Do not add the lot if it's a duplicate
       }
 
@@ -90,11 +103,11 @@ export default function SearchBar({
 
       console.log("Parking lot added successfully");
       setlots(existingParkingLots);
-
+      if(mylots.length <= 1)
+        setActiveLot(selectedLot)
     } catch (error) {
       console.error("Error adding parking lot:", error);
     }
-
   };
 
   return (
@@ -114,7 +127,6 @@ export default function SearchBar({
           <Button title="+" color="#ffffff" onPress={addLot} />
         </View>
       </View>
-
       {isSuggestionsVisible && filteredParkingLots.length > 0 && (
         <View className="p-3 bg-white">
           <FlatList

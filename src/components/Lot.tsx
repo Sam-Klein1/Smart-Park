@@ -1,17 +1,26 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 
-export default function Lot({ lot, activeLot, setActiveLot, mylots, setlots }) {
-  const handleItemPress = (lot) => {
-    setActiveLot(lot);
-    // Additional logic to handle item press as needed
+export default function Lot({ lot, activeLot, setactiveLot, mylots, setlots }) {
+  
+  const navigation = useNavigation();
+
+  const handleItemPress = (lot: any) => {
+    setactiveLot(lot);
+    navigation.navigate("Home" as never)
   };
 
   const handleDelete = async (lot) => {
     try {
       // Filter out the selected lot from mylots
-      const updatedLots = mylots.filter((item) => item.id !== lot.id);
+      const updatedLots = mylots.filter((item) => item.id !== lot?.id);
+
+      //remove active lot
+      if (updatedLots.length === 0)
+        setactiveLot(null)
+
       setlots(updatedLots);
 
       // Update AsyncStorage
@@ -22,22 +31,22 @@ export default function Lot({ lot, activeLot, setActiveLot, mylots, setlots }) {
   };
 
   return (
-    <View
+    <TouchableOpacity
       className={`p-6 border-b flex-row space-x-4 bg-gray-200 ${
-        activeLot && activeLot.id === lot.id ? "bg-gray-300" : ""
+        activeLot && activeLot.id === lot?.id ? "bg-gray-300" : ""
       }`}
-      onTouchEnd={() => handleItemPress(lot)}
+      onPress={() => handleItemPress(lot)}
     >
-      {activeLot && activeLot.id === lot.id ? <Text>🔘</Text> : <Text>⚪️</Text>}
-      <Text>{lot.name}</Text>
+      {activeLot && activeLot.id === lot?.id ? <Text>🔘</Text> : <Text>⚪️</Text>}
+      <Text className="font-bold">{lot?.name}</Text>
       <Text>-</Text>
-      <Text className="italic">{lot.location}</Text>
+      <Text className="italic">{lot?.location}</Text>
       <View
         className="absolute right-4 top-[22px]"
         onTouchEnd={() => handleDelete(lot)}
       >
         <Icon name="trash-outline" size={23} />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }

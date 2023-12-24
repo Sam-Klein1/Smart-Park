@@ -11,7 +11,8 @@ const Timer = ({ seconds }) => {
   );
 };
 
-const Home = () => {
+const Home = ({activeLot, setActiveLot}) => {
+
   const [data, setData] = useState(null);
   const [secondsUntilUpdate, setSecondsUntilUpdate] = useState(10);
 
@@ -28,28 +29,29 @@ const Home = () => {
   useEffect(() => {
     // fetchData();
 
-    // // Set up an interval to fetch data every 10 seconds
-    // const intervalId = setInterval(() => {
-    //   fetchData();
-    //   setSecondsUntilUpdate(10); // Reset the timer after fetching data
-    // }, 10000);
+    // Set up an interval to fetch data every 10 seconds
+    const intervalId = setInterval(() => {
+      // fetchData();
+      setSecondsUntilUpdate(10); // Reset the timer after fetching data
+    }, 10000);
 
-    // // Set up an interval to update the timer every second
-    // const timerIntervalId = setInterval(() => {
-    //   setSecondsUntilUpdate((prevSeconds) => prevSeconds - 1);
-    // }, 1000);
+    // Set up an interval to update the timer every second
+    const timerIntervalId = setInterval(() => {
+      setSecondsUntilUpdate((prevSeconds) => prevSeconds - 1);
+    }, 1000);
 
-    // // Clean up the intervals when the component is unmounted
-    // return () => {
-    //   clearInterval(intervalId);
-    //   clearInterval(timerIntervalId);
-    // };
+    // Clean up the intervals when the component is unmounted
+    return () => {
+      clearInterval(intervalId);
+      clearInterval(timerIntervalId);
+    };
   }, []); // Empty dependency array means this effect runs once when the component mounts
 
   return (
-    <View className={`flex-1 bg-gray-700`}>
+    <View className="flex-1">
+      <Text>{activeLot ? `Active Lot: ${activeLot.name}` : "No Active Lot"}</Text>
       {/* Image */}
-      <View className="flex-1 justify-center">
+      <View className="h-2/3 justify-center">
         <Image
           className="w-full h-full"
           resizeMode="contain"
@@ -61,26 +63,28 @@ const Home = () => {
 
       {/* Data */}
       <View className="flex-1 relative bg-white flex-row justify-center items-center space-x-12 rounded-tr-xl rounded-tl-xl">
+        
+        {/* Total
         <View>
           <Text className="text-2xl text-center">{data?.total_spaces}</Text>
           <Text>Total</Text>
-        </View>
+        </View> */}
 
         {/* Free spaces */}
         <View>
           <Text className="text-center text-8xl text-green-600">
             {data?.open_spaces.length}
           </Text>
-          <Text className="text-2xl">Spaces free!</Text>
+          <Text className="text-2xl text-center">Spaces free!</Text>
         </View>
 
-        {/* Taken spaces */}
+        {/* Taken spaces
         <View>
           <Text className="text-2xl text-center text-red-600">
             {data?.occupied_spaces.length}
           </Text>
           <Text>Taken</Text>
-        </View>
+        </View> */}
 
         {/* Timer */}
         <Timer seconds={secondsUntilUpdate} />
