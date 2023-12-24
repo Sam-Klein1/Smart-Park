@@ -13,7 +13,7 @@ export default function Lots() {
     const loadMyLots = async () => {
       try {
         const storedLots = await AsyncStorage.getItem("parkingLots");
-        console.log(storedLots)
+        // console.log(storedLots)
         if (storedLots) {
           const parsedLots = JSON.parse(storedLots);
           setMyLots(parsedLots);
@@ -42,8 +42,10 @@ export default function Lots() {
         />
 
         {/* My Lots */}
-        <View className="border-y">
-          <Text className="p-4 text-xl font-bold">MY LOTS:</Text>
+        <View className="border-y flex-row">
+          <Text className="p-4 text-xl font-bold">MY LOTS</Text>
+          <Text className="p-4 px-2 text-xl font-bold text-green-700">Active</Text>
+          <Text className="p-4 px-0 text-xl font-bold">{activeLot?.name}</Text>
         </View>
 
         <FlatList
