@@ -49,14 +49,14 @@ export default function Lots({ activeLot, setActiveLot }) {
         />
 
         {/* My Lots */}
-        <View className="border-y flex-row">
-          <Text className="p-4 text-xl font-bold">MY LOTS:</Text>
-          {activeLot && (
-            <Text className="p-4 px-2 text-xl font-bold text-green-700">
-              Active
-            </Text>
-          )}
-          <Text className="p-4 px-0 text-xl font-bold">{activeLot?.name}</Text>
+        <View className="p-4 flex-row">
+          <Text className="text-xl self-center font-bold">MY LOTS:</Text>
+          <View className="flex-1">
+            <Text className="text-center text-xl font-bold">{activeLot?.name}</Text>
+            {activeLot && (
+              <Text className="text-center text-xs text-green-700">Active</Text>
+            )}
+          </View>
         </View>
 
         <FlatList

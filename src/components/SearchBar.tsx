@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   Button,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -24,6 +25,7 @@ export default function SearchBar({
     name: "",
     location: "",
   }); // Initialize with an empty object
+  const [showDuplicateError, setShowDuplicateError] = useState(false);
 
   useEffect(() => {
     const fetchParkingLots = async () => {
@@ -50,6 +52,17 @@ export default function SearchBar({
     setFilteredParkingLots(filteredLots);
   }, [searchQuery, parkingLots]);
 
+  useEffect(() => {
+    // Show the error message for 3 seconds when isDuplicateLot is true
+    if (showDuplicateError) {
+      const timeoutId = setTimeout(() => {
+        setShowDuplicateError(false);
+      }, 3000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [showDuplicateError]);
+
   const handleFocus = () => {
     setIsSuggestionsVisible(true);
   };
@@ -66,7 +79,17 @@ export default function SearchBar({
       );
 
       if (!doesLotExist) {
-        console.log("Parking lot does not exist in the database.");
+        Alert.alert(
+          "Error!",
+          "Parking lot does not exist in our database",
+          [
+            {
+              text: "OK",
+              onPress: () => console.log("OK Pressed"),
+            },
+          ],
+          { cancelable: false }
+        );
         return; // Do not add the lot if it doesn't exist in the database
       }
 
@@ -74,6 +97,7 @@ export default function SearchBar({
 
       if (isDuplicateLot) {
         console.log("Parking lot with the same ID already exists.");
+        setShowDuplicateError(true);
         return; // Do not add the lot if it's a duplicate
       }
 
@@ -100,11 +124,27 @@ export default function SearchBar({
 
       // Save the updated string back to AsyncStorage
       await AsyncStorage.setItem("parkingLots", updatedParkingLotsString);
+    
+      Alert.alert(
+        "Lot Added!",
+        "",
+        [
+          {
+            text: "OK",
+            onPress: () => console.log("OK Pressed"),
+          },
+        ],
+        { cancelable: false }
+      );
 
-      console.log("Parking lot added successfully");
       setlots(existingParkingLots);
-      if(mylots.length <= 1)
-        setActiveLot(selectedLot)
+      if (mylots.length <= 1) setActiveLot(selectedLot);
+      setSearchQuery("")
+      setSelectedLot({
+        id: null,
+        name: "",
+        location: "",
+      })
     } catch (error) {
       console.error("Error adding parking lot:", error);
     }
@@ -127,6 +167,11 @@ export default function SearchBar({
           <Button title="+" color="#ffffff" onPress={addLot} />
         </View>
       </View>
+      {showDuplicateError && (
+        <Text className="relative text-red-600 text-center top-4">
+          Lot with the same ID has already been added
+        </Text>
+      )}
       {isSuggestionsVisible && filteredParkingLots.length > 0 && (
         <View className="p-3 bg-white">
           <FlatList

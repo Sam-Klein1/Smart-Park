@@ -18,7 +18,7 @@ const Home = ({activeLot, setActiveLot}) => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`https://0a93-104-228-110-109.ngrok-free.app`);
+      const response = await fetch(`http://192.168.254.135:8080/data`);
       const result = await response.json();
       setData(result);
     } catch (error) {
@@ -27,11 +27,11 @@ const Home = ({activeLot, setActiveLot}) => {
   };
 
   useEffect(() => {
-    // fetchData();
+    fetchData();
 
     // Set up an interval to fetch data every 10 seconds
     const intervalId = setInterval(() => {
-      // fetchData();
+      fetchData();
       setSecondsUntilUpdate(10); // Reset the timer after fetching data
     }, 10000);
 
@@ -45,11 +45,11 @@ const Home = ({activeLot, setActiveLot}) => {
       clearInterval(intervalId);
       clearInterval(timerIntervalId);
     };
-  }, []); // Empty dependency array means this effect runs once when the component mounts
+  }, [activeLot]); // Empty dependency array means this effect runs once when the component mounts
 
   return (
     <View className="flex-1">
-      <Text>{activeLot ? `Active Lot: ${activeLot.name}` : "No Active Lot"}</Text>
+      <Text>{activeLot ? `Active Lot: ${activeLot.name} ${activeLot.location} ${activeLot.id}` : "No Active Lot"}</Text>
       {/* Image */}
       <View className="h-2/3 justify-center">
         <Image
