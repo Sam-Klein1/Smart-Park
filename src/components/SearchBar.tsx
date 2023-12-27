@@ -30,7 +30,7 @@ export default function SearchBar({
   useEffect(() => {
     const fetchParkingLots = async () => {
       try {
-        const response = await fetch("http://192.168.254.135:8080/lots");
+        const response = await fetch("http://127.0.0.1:8080/lots");
         const data = await response.json();
         setParkingLots(data);
       } catch (error) {

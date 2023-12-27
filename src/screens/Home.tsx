@@ -18,7 +18,7 @@ const Home = ({activeLot, setActiveLot}) => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`http://192.168.254.135:8080/data`);
+      const response = await fetch(`http://127.0.0.1:8080/data`);
       const result = await response.json();
       setData(result);
     } catch (error) {
@@ -56,7 +56,7 @@ const Home = ({activeLot, setActiveLot}) => {
           className="w-full h-full"
           resizeMode="contain"
           source={{
-            uri: "https://0a93-104-228-110-109.ngrok-free.app/image",
+            uri: "http://127.0.0.1:8080/image",
           }}
         />
       </View>

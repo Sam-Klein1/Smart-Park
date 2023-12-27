@@ -52,8 +52,11 @@ function MyTabs() {
         name="Lots" 
         children={() => <Lots activeLot={activeLot} setActiveLot={setActiveLot} />} 
       />
-      <Tab.Screen name="Settings" component={Settings} />
-
+      {/* <Tab.Screen name="Settings" component={Settings} /> */}
+      <Tab.Screen
+        name="Settings"
+        children={() => <Settings />}
+      />
 
     </Tab.Navigator>
   );
