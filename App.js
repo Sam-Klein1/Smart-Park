@@ -14,7 +14,11 @@ const Tab = createBottomTabNavigator();
 
 function MyTabs() {
 
-  const [activeLot, setActiveLot] = useState(null)
+  const [activeLot, setActiveLot] = useState({
+    id: null,
+    name: "",
+    location: "",
+  })
 
   return (
 

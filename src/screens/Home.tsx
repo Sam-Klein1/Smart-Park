@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Text, View, Image } from "react-native";
 
 // Timer component
@@ -11,27 +11,49 @@ const Timer = ({ seconds }) => {
   );
 };
 
-const Home = ({activeLot, setActiveLot}) => {
-
+const Home = ({ activeLot, setActiveLot }) => {
   const [data, setData] = useState(null);
   const [secondsUntilUpdate, setSecondsUntilUpdate] = useState(10);
+  const isMounted = useRef(false);
+
+  const [uri, setUri] = useState<string>(
+    `http://192.168.254.135:8080/image/${activeLot.id}`
+  );
 
   const fetchData = async () => {
+    if (activeLot.id === null) return;
+
     try {
-      const response = await fetch(`http://192.168.254.135:8080/data`);
+      const response = await fetch(
+        `http://192.168.254.135:8080/data/${activeLot.id}`
+      );
       const result = await response.json();
       setData(result);
+
+      // Update the uri with a timestamp to force image reload
+      setUri(
+        `http://192.168.254.135:8080/image/${
+          activeLot.id
+        }?timestamp=${Date.now()}`
+      );
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   useEffect(() => {
+    if (!isMounted.current) {
+      // Skip the API call on initial mount
+      isMounted.current = true;
+      return;
+    }
+
     fetchData();
 
     // Set up an interval to fetch data every 10 seconds
     const intervalId = setInterval(() => {
       fetchData();
+
       setSecondsUntilUpdate(10); // Reset the timer after fetching data
     }, 10000);
 
@@ -45,25 +67,20 @@ const Home = ({activeLot, setActiveLot}) => {
       clearInterval(intervalId);
       clearInterval(timerIntervalId);
     };
-  }, [activeLot]); // Empty dependency array means this effect runs once when the component mounts
+  }, [activeLot]);
 
   return (
     <View className="flex-1">
-      <Text>{activeLot ? `Active Lot: ${activeLot.name} ${activeLot.location} ${activeLot.id}` : "No Active Lot"}</Text>
       {/* Image */}
-      <View className="h-2/3 justify-center">
-        <Image
-          className="w-full h-full"
-          resizeMode="contain"
-          source={{
-            uri: "https://0a93-104-228-110-109.ngrok-free.app/image",
-          }}
-        />
-      </View>
+      <Image
+        className="w-full h-full flex-1"
+        source={{
+          uri: uri,
+        }}
+      />
 
       {/* Data */}
       <View className="flex-1 relative bg-white flex-row justify-center items-center space-x-12 rounded-tr-xl rounded-tl-xl">
-        
         {/* Total
         <View>
           <Text className="text-2xl text-center">{data?.total_spaces}</Text>
@@ -73,7 +90,7 @@ const Home = ({activeLot, setActiveLot}) => {
         {/* Free spaces */}
         <View>
           <Text className="text-center text-8xl text-green-600">
-            {data?.open_spaces.length}
+            {data?.free_spots.length}
           </Text>
           <Text className="text-2xl text-center">Spaces free!</Text>
         </View>

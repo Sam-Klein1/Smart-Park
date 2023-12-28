@@ -136,7 +136,7 @@ export default function SearchBar({
         ],
         { cancelable: false }
       );
-
+      setIsSuggestionsVisible(false)
       setlots(existingParkingLots);
       if (mylots.length <= 1) setActiveLot(selectedLot);
       setSearchQuery("")
@@ -173,12 +173,13 @@ export default function SearchBar({
         </Text>
       )}
       {isSuggestionsVisible && filteredParkingLots.length > 0 && (
-        <View className="p-3 bg-white">
+        <View className="p-4 bg-white rounded-b">
           <FlatList
             data={filteredParkingLots}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity
+              className="flex-row items-center py-1"
                 onPress={() => {
                   setSearchQuery(`${item.id}`);
                   setSelectedLot({
@@ -188,7 +189,11 @@ export default function SearchBar({
                   });
                 }}
               >
-                <Text className="p-2">{`${item.name} - ${item.location} - ${item.id}`}</Text>
+                <View>
+                  <Text className="text-xl font-bold">{item.name}</Text>
+                  <Text className="text-base italic">{item.location}</Text>
+                </View>
+                <Text className="flex-1 text-right mr-6">ID: {item.id}</Text>
               </TouchableOpacity>
             )}
           />

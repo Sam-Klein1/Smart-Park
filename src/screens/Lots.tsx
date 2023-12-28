@@ -53,7 +53,7 @@ export default function Lots({ activeLot, setActiveLot }) {
           <Text className="text-xl self-center font-bold">MY LOTS:</Text>
           <View className="flex-1">
             <Text className="text-center text-xl font-bold">{activeLot?.name}</Text>
-            {activeLot && (
+            {activeLot.id && (
               <Text className="text-center text-xs text-green-700">Active</Text>
             )}
           </View>

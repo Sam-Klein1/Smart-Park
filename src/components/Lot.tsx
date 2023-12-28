@@ -8,7 +8,7 @@ export default function Lot({ lot, activeLot, setactiveLot, mylots, setlots }) {
 
   const handleItemPress = (lot: any) => {
     setactiveLot(lot);
-    navigation.navigate("Home" as never);
+    // navigation.navigate("Home" as never);
   };
 
   const handleDelete = async (lot) => {
@@ -20,6 +20,7 @@ export default function Lot({ lot, activeLot, setactiveLot, mylots, setlots }) {
       if (updatedLots.length === 0) setactiveLot(null);
 
       setlots(updatedLots);
+      // setactiveLot(null)
 
       // Update AsyncStorage
       await AsyncStorage.setItem("parkingLots", JSON.stringify(updatedLots));
@@ -41,24 +42,38 @@ export default function Lot({ lot, activeLot, setactiveLot, mylots, setlots }) {
 
   return (
     <TouchableOpacity
-      className={`p-6 flex-row space-x-4 bg-gray-200 ${
+      className={`p-4 flex-row space-x-4 bg-gray-200 ${
         activeLot && activeLot.id === lot?.id ? "bg-gray-300" : ""
       }`}
       onPress={() => handleItemPress(lot)}
     >
       {activeLot && activeLot.id === lot?.id ? (
-        <Text>🔘</Text>
+        <Text className="text-xl self-center">🅿️</Text>
       ) : (
-        <Text>⚪️</Text>
+        <Text className="text-xl self-center">🅿</Text>
       )}
-      <Text className="font-bold">{lot?.name}</Text>
-      <Text>-</Text>
-      <Text className="italic">{lot?.location}</Text>
+      <Text className="font-bold self-center">{lot?.name}</Text>
+      <Text className="self-center">-</Text>
+      <Text className="italic self-center">{lot?.location}</Text>
       <TouchableOpacity
-        className="absolute right-4 top-[22px]"
+        className="flex-1 self-center items-end"
         onPress={(e) => {
           e.stopPropagation();
-          handleDelete(lot);
+          if (lot.id === activeLot.id) {
+            Alert.alert(
+              "Error!",
+              "Cannot remove an active lot.",
+              [
+                {
+                  text: "OK",
+                  onPress: () => console.log("OK Pressed"),
+                },
+              ],
+              { cancelable: false }
+            );
+          }
+          else
+            handleDelete(lot);
         }}
       >
         <Icon name="trash-outline" size={23} />
