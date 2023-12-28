@@ -1,27 +1,50 @@
 import { useState } from "react";
-import { View, Text, Switch, TouchableOpacity, StyleSheet } from "react-native";
-import Contact from "../components/Setting"; // Import the SettingComponents
-
-interface SettingsProps {
-  // Add any necessary props based on your requirements
-}
+import {
+  View,
+  Text,
+  Switch,
+  TouchableOpacity,
+  Alert,
+  Linking,
+} from "react-native";
 
 const Settings = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
-  const [locationSharingEnabled, setLocationSharingEnabled] =
-    useState(false);
+
+  // const [locationSharingEnabled, setLocationSharingEnabled] = useState(false);
 
   const handleToggleDarkMode = (value: boolean) => {
     setDarkModeEnabled(value);
   };
+  const handleEmailLink = () => {
+    Linking.openURL("mailto:parkingsmartsolutions@gmail.com");
+  };
+  const handleCallNumber = () => {
+    Alert.alert(
+      "Call Support",
+      "Do you want to call smart park support?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Call",
+          onPress: () => {
+            Linking.openURL("tel:+16079531980");
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   return (
-    <View className="flex-1 p-8 flex-col space-y-8">
-      
+    <View className="flex-1 p-6 flex-col space-y-6">
       {/* Notifs */}
       <View>
-      <Text className="text-lg font-bold">Notification Preferences</Text>
+        <Text className="text-lg font-bold">Notification Preferences</Text>
         <View className="flex-row">
           <Text className="text-lg ">Notifications Enabled</Text>
           <View className="flex-1 items-end">
@@ -69,15 +92,36 @@ const Settings = () => {
       {/* Privacy & Security */}
       <View>
         <Text className="text-lg font-bold">Privacy and Security</Text>
-        <Text className="text-lg ">Location Sharing</Text>
-        <Switch
-          value={locationSharingEnabled}
-          onValueChange={(value) => setLocationSharingEnabled(value)}
-        />
+        <View className="flex-row">
+          <Text className="text-lg ">Location Sharing</Text>
+          <View className="flex-1 items-end">
+            <Switch value={notificationsEnabled} onValueChange={() => {}} />
+          </View>
+        </View>
+        <Text className="text-sm pr-8 text-gray-400">
+          Used for finding parking lots nearby you
+        </Text>
       </View>
 
       {/* Contact Support */}
-      <Contact />
+      <View className="">
+        <Text className="text-lg font-bold">Contact Support</Text>
+        <TouchableOpacity className="flex-row" onPress={handleEmailLink}>
+          <Text>Email: </Text>
+          <Text className="text-color-700 text-decoration-line: underline text-blue-700">
+            parkingsmartsolutions@gmail.com
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity className="flex-row" onPress={handleCallNumber}>
+          <Text>Phone: </Text>
+          <Text className="text-color-700 text-decoration-line: underline text-blue-700">
+            (607)-953-1980
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* TODO: Terms & Conditions */}
+      
 
     </View>
   );
