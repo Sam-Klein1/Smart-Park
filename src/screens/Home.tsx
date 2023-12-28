@@ -16,9 +16,8 @@ const Home = ({ activeLot, setActiveLot }) => {
   const [secondsUntilUpdate, setSecondsUntilUpdate] = useState(10);
   const isMounted = useRef(false);
 
-  const [uri, setUri] = useState<string>(
-    `http://192.168.254.135:8080/image/${activeLot.id}`
-  );
+  const [imageURI, setImageURI] = useState(""); // initialize it to an empty string
+
 
   const fetchData = async () => {
     if (activeLot.id === null) return;
@@ -31,7 +30,7 @@ const Home = ({ activeLot, setActiveLot }) => {
       setData(result);
 
       // Update the uri with a timestamp to force image reload
-      setUri(
+      setImageURI(
         `http://192.168.254.135:8080/image/${
           activeLot.id
         }?timestamp=${Date.now()}`
@@ -72,15 +71,17 @@ const Home = ({ activeLot, setActiveLot }) => {
   return (
     <View className="flex-1">
       {/* Image */}
-      <Image
-        className="w-full h-full flex-1"
-        source={{
-          uri: uri,
-        }}
-      />
+        <Image
+          className="w-full h-[45%]"
+          source={{
+            uri: imageURI,
+          }}
+          resizeMode="contain"
+          alt="No Lot selected"
+        />
 
       {/* Data */}
-      <View className="flex-1 relative bg-white flex-row justify-center items-center space-x-12 rounded-tr-xl rounded-tl-xl">
+      <View className="flex-1 bg-white flex-row justify-center items-center space-x-12 rounded-tr-xl rounded-tl-xl">
         {/* Total
         <View>
           <Text className="text-2xl text-center">{data?.total_spaces}</Text>
