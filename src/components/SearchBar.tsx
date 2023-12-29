@@ -4,9 +4,9 @@ import {
   View,
   TextInput,
   FlatList,
-  TouchableOpacity,
   Button,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -205,7 +205,7 @@ export default function SearchBar({
                     </Text>
                     <Text className="text-base italic">{item.location}</Text>
                   </View>
-                  <Text className="flex-1 text-right mr-6">ID: {item.id}</Text>
+                  <Text className="flex-1 text-right">ID: {item.id}</Text>
                 </TouchableOpacity>
               )}
             />

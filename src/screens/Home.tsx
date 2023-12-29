@@ -1,20 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Text, View, Image, TouchableOpacity, Platform } from "react-native";
+import { Text, View, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
-// Timer component
-const Timer = ({ seconds }) => {
-  return (
-    <View className="absolute top-4 left-4">
-      <Text className="justify-center">update in</Text>
-      <Text className="text-2xl text-center">{seconds}</Text>
-    </View>
-  );
-};
+import Icon from "react-native-vector-icons/Ionicons";
 
 const Home = ({ activeLot, setActiveLot }) => {
   const [data, setData] = useState(null);
-  const [secondsUntilUpdate, setSecondsUntilUpdate] = useState(10);
+  const [secondsUntilUpdate, setSecondsUntilUpdate] = useState(30);
   const isMounted = useRef(false);
   const navigation = useNavigation(); // Hook from React Navigation
 
@@ -56,8 +47,8 @@ const Home = ({ activeLot, setActiveLot }) => {
     const intervalId = setInterval(() => {
       fetchData();
 
-      setSecondsUntilUpdate(10); // Reset the timer after fetching data
-    }, 10000);
+      setSecondsUntilUpdate(30); // Reset the timer after fetching data
+    }, 30000);
 
     // Set up an interval to update the timer every second
     const timerIntervalId = setInterval(() => {
@@ -80,20 +71,36 @@ const Home = ({ activeLot, setActiveLot }) => {
 
   return (
     <View className="flex-1 bg-white">
-      {/* Image */}
-      <View className="flex-1">
-        <Image
-          className="w-full h-full"
-          source={{
-            uri: imageURI,
-          }}
-          resizeMode="contain"
-          alt="No Lot selected"
-        />
+      
+      {/* Top Bar */}
+      <View className="flex-row">
+        <TouchableOpacity onPress={() => {}} className="items-center p-4">
+          <Icon name="refresh" size={25} />
+          <Text className="text-sm text-center">{secondsUntilUpdate}</Text>
+        </TouchableOpacity>
       </View>
 
-      <View className="p-4">
+      {/* Image */}
+      <View className="flex-1">
+        {activeLot.id ? (
+          <Image
+            className="w-full h-full"
+            source={{
+              uri: imageURI,
+            }}
+            resizeMode="contain"
+            alt="No Lot selected"
+          />
+        ) : (
+          <View className="w-full h-full justify-center mt-4">
+            <Text className="text-center">No lot selected</Text>
+          </View>
+        )}
+      </View>
+
+      <View className="p-4 flex-row justify-center space-x-2">
         <Text className="text-center text-xl italic">{activeLot.location}</Text>
+        <Text className="text-xs self-center">(ID: {activeLot.id})</Text>
       </View>
 
       {/* Data */}
@@ -103,29 +110,38 @@ const Home = ({ activeLot, setActiveLot }) => {
         style={{
           shadowOpacity: 0.3,
           shadowRadius: 3,
+          elevation: 5,
         }}
       >
         {/* Free spaces */}
         {activeLot.id ? (
-          <>
+          <View>
             <Text className="text-center text-8xl text-white">
               {data?.free_spots.length}
             </Text>
             <Text className="text-2xl text-center text-white">
               Spaces free!
             </Text>
-          </>
+          </View>
         ) : (
           <TouchableOpacity
             onPress={() => navigation.navigate("Lots" as never)}
           >
-            <Text className="text-center text-3xl text-white">
-              Find a lot to view!
-            </Text>
+            <View
+              className="rounded-lg bg-white w-4/5 self-center"
+              style={{
+                shadowOpacity: 3,
+                shadowRadius: 5,
+                shadowOffset: { width: 0, height: 3 },
+              }}
+            >
+              <Text className="text-center text-2xl text-black">
+                Find a lot to view!
+              </Text>
+            </View>
           </TouchableOpacity>
         )}
       </View>
-      <Timer seconds={secondsUntilUpdate} />
     </View>
   );
 };
