@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default function SearchBar({
   isSuggestionsVisible,
@@ -152,14 +152,17 @@ export default function SearchBar({
   };
 
   return (
-    <View className="p-6 bg-gray-300">
-      <View className="z-10 bg-white shadow-md rounded-xl p-6">
-        
-        <Text className="mb-2 text-2xl">Find a lot</Text>
+    <View className="p-6">
+      <View className="bg-white shadow-xl rounded-xl p-6">
+        <View className="flex-row space-x-2">
+          <Text className="text-2xl">Find a lot</Text>
+          <View className="justify-center">
+            <Icon name="search" size={20} />
+          </View>
+        </View>
 
         {/* Search bar */}
         <View className="flex-row">
-        {/* <Icon name="search" size={20}/> */}
           <TextInput
             className="p-4 border border-gray-300 rounded w-5/6 rounded-r-none"
             placeholder="Enter lot ID or search for lots"
@@ -178,7 +181,7 @@ export default function SearchBar({
             Lot with the same ID has already been added
           </Text>
         )}
-        
+
         {isSuggestionsVisible && filteredParkingLots.length > 0 && (
           <View className="p-4 bg-white rounded-b">
             <FlatList

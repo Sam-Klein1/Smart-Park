@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Text, View, Image } from "react-native";
+import { Text, View, Image, TouchableOpacity, Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 // Timer component
@@ -97,22 +97,33 @@ const Home = ({ activeLot, setActiveLot }) => {
       </View>
 
       {/* Data */}
-      <View className="h-1/3 bg-[#007aff] justify-center rounded-t-2xl shadow-lg p-6">
+      <View
+        className="h-1/3 bg-[#007aff] justify-center 
+      rounded-t-2xl p-6"
+        style={{
+          shadowOpacity: 0.4,
+          shadowRadius: 5,
+        }}
+      >
         {/* Free spaces */}
-        <View>
-          {activeLot.id ? (
-            <>
-              <Text className="text-center text-8xl text-white">
-                {data?.free_spots.length}
-              </Text>
-              <Text className="text-2xl text-center text-white">
-                Spaces free!
-              </Text>
-            </>
-          ) : (
-            <Text className="text-center text-3xl text-orange-500">Pick a lot slut</Text>
-          )}
-        </View>
+        {activeLot.id ? (
+          <>
+            <Text className="text-center text-8xl text-white">
+              {data?.free_spots.length}
+            </Text>
+            <Text className="text-2xl text-center text-white">
+              Spaces free!
+            </Text>
+          </>
+        ) : (
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Lots" as never)}
+          >
+            <Text className="text-center text-3xl text-white">
+              Find a lot to view!
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
       <Timer seconds={secondsUntilUpdate} />
     </View>

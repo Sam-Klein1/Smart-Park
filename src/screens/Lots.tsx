@@ -49,14 +49,16 @@ export default function Lots({ activeLot, setActiveLot }) {
         />
 
         {/* My Lots */}
-        <View className="p-4 flex-row">
-          <Text className="text-xl self-center font-bold">My Lots:</Text>
-          <View className="flex-1">
-            <Text className="text-center text-xl font-bold">{activeLot?.name}</Text>
-            {activeLot.id && (
-              <Text className="text-center text-xs text-green-700">Active</Text>
-            )}
-          </View>
+        <View className="pb-6">
+          {activeLot.id && (
+            <View className="flex-row space-x-2 justify-center">
+              <Text className="text-center text-xl font-bold">
+                {activeLot.name}
+              </Text>
+              {/* <Text className="text-lg self-center">(ID: {activeLot.id})</Text> */}
+              <Text className="text-center italic text-xs self-center text-green-700">(Active)</Text>
+            </View>
+          )}
         </View>
 
         <FlatList
@@ -72,7 +74,7 @@ export default function Lots({ activeLot, setActiveLot }) {
             />
           )}
           ListEmptyComponent={() => (
-            <View className="items-center p-4">
+            <View className="items-center">
               <Text>No parking lots added yet...</Text>
             </View>
           )}
