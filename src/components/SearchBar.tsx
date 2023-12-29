@@ -7,6 +7,7 @@ import {
   Button,
   Alert,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -21,11 +22,6 @@ export default function SearchBar({
   const [parkingLots, setParkingLots] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredParkingLots, setFilteredParkingLots] = useState([]);
-  const [selectedLot, setSelectedLot] = useState({
-    id: null,
-    name: "",
-    location: "",
-  }); // Initialize with an empty object
   const [showDuplicateError, setShowDuplicateError] = useState(false);
 
   useEffect(() => {
@@ -76,7 +72,7 @@ export default function SearchBar({
     try {
       // Check if the selected lot exists in the database
       const doesLotExist = parkingLots.some(
-        (lot) => lot?.id === selectedLot.id
+        (lot) => lot?.id === parseInt(searchQuery)
       );
 
       if (!doesLotExist) {
@@ -94,7 +90,9 @@ export default function SearchBar({
         return; // Do not add the lot if it doesn't exist in the database
       }
 
-      const isDuplicateLot = mylots.some((lot) => lot?.id === selectedLot.id);
+      const isDuplicateLot = mylots.some(
+        (lot) => lot?.id === parseInt(searchQuery)
+      );
 
       if (isDuplicateLot) {
         console.log("Parking lot with the same ID already exists.");
@@ -117,8 +115,13 @@ export default function SearchBar({
         existingParkingLots = [];
       }
 
+      // Find the parking lot with the same ID as searchQuery
+      const foundLot = parkingLots.find(
+        (lot) => lot?.id === parseInt(searchQuery)
+      );
+
       // Append the new parking lot to the array
-      existingParkingLots.push(selectedLot);
+      existingParkingLots.push({id: foundLot.id, name: foundLot.name, location: foundLot.location});
 
       // Convert the updated array back to a string
       const updatedParkingLotsString = JSON.stringify(existingParkingLots);
@@ -137,15 +140,11 @@ export default function SearchBar({
         ],
         { cancelable: false }
       );
+
       setIsSuggestionsVisible(false);
       setlots(existingParkingLots);
-      if (mylots.length <= 1) setActiveLot(selectedLot);
+      setActiveLot({id: foundLot.id, name: foundLot.name, location: foundLot.location});
       setSearchQuery("");
-      setSelectedLot({
-        id: null,
-        name: "",
-        location: "",
-      });
     } catch (error) {
       console.error("Error adding parking lot:", error);
     }
@@ -153,7 +152,7 @@ export default function SearchBar({
 
   return (
     <View className="p-6">
-      <View className="bg-white rounded-xl p-6 shadow-xl" >
+      <View className="bg-white rounded-xl p-6 shadow-xl">
         <View className="flex-row space-x-2">
           <Text className="text-2xl">Find a lot</Text>
           <View className="justify-center">
@@ -186,17 +185,12 @@ export default function SearchBar({
           <View className="p-4 bg-white rounded-b">
             <FlatList
               data={filteredParkingLots}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item) => item?.id}
               renderItem={({ item }) => (
-                <TouchableOpacity
-                  className="flex-row items-center py-1"
-                  onPress={() => {
+                <Pressable
+                  className="flex-row items-center py-1 border"
+                  onPressOut={() => {
                     setSearchQuery(`${item.id}`);
-                    setSelectedLot({
-                      id: item.id,
-                      name: item.name,
-                      location: item.location,
-                    });
                   }}
                 >
                   <View>
@@ -206,7 +200,7 @@ export default function SearchBar({
                     <Text className="text-base italic">{item.location}</Text>
                   </View>
                   <Text className="flex-1 text-right">ID: {item.id}</Text>
-                </TouchableOpacity>
+                </Pressable>
               )}
             />
           </View>

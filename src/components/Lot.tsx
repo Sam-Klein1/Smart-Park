@@ -7,8 +7,19 @@ export default function Lot({ lot, activeLot, setactiveLot, mylots, setlots }) {
   const navigation = useNavigation();
 
   const handleItemPress = (lot: any) => {
+    if(lot.id === activeLot.id)
+      Alert.alert(
+        "Lot already active!",
+        "",
+        [
+          {
+            text: "OK",
+            onPress: () => console.log("OK Pressed"),
+          },
+        ],
+        { cancelable: false }
+      )
     setactiveLot(lot);
-    // navigation.navigate("Home" as never);
   };
 
   const handleDelete = async (lot) => {
@@ -55,29 +66,28 @@ export default function Lot({ lot, activeLot, setactiveLot, mylots, setlots }) {
       <Text className="font-bold self-center">{lot?.name}</Text>
       <Text className="self-center">-</Text>
       <Text className="italic self-center">{lot?.location}</Text>
-      <TouchableOpacity
-        className="flex-1 self-center items-end"
-        onPress={(e) => {
-          e.stopPropagation();
-          if (lot.id === activeLot.id) {
-            Alert.alert(
-              "Error!",
-              "Cannot remove an active lot.",
-              [
-                {
-                  text: "OK",
-                  onPress: () => console.log("OK Pressed"),
-                },
-              ],
-              { cancelable: false }
-            );
-          }
-          else
-            handleDelete(lot);
-        }}
-      >
-        <Icon name="trash-outline" size={23} />
-      </TouchableOpacity>
+      <View className="flex-1 self-center items-end">
+        <Icon
+          name="trash-outline"
+          size={23}
+          onPress={(e) => {
+            e.stopPropagation();
+            if (lot.id === activeLot.id) {
+              Alert.alert(
+                "Error!",
+                "Cannot remove an active lot.",
+                [
+                  {
+                    text: "OK",
+                    onPress: () => console.log("OK Pressed"),
+                  },
+                ],
+                { cancelable: false }
+              );
+            } else handleDelete(lot);
+          }}
+        />
+      </View>
     </TouchableOpacity>
   );
 }

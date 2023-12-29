@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Modal,
   Button,
-  TouchableWithoutFeedback,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -18,26 +17,23 @@ const Home = ({ activeLot, setActiveLot }) => {
   const navigation = useNavigation(); // Hook from React Navigation
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [imageURI, setImageURI] = useState(
-    `http://192.168.254.135:8080/image/${activeLot.id}`
-  ); // initialize it to an empty string
+  const [image, setImage] = useState(`http://192.168.254.135:8080/image/${activeLot.id}`); // initialize it to an empty string
 
   const fetchData = async () => {
     if (activeLot.id === null) return;
 
     try {
-      const response = await fetch(
+      const res_data = await fetch(
         `http://192.168.254.135:8080/data/${activeLot.id}`
       );
-      const result = await response.json();
+      const result = await res_data.json();
       setData(result);
 
-      // Update the uri with a timestamp to force image reload
-      setImageURI(
-        `http://192.168.254.135:8080/image/${
-          activeLot.id
-        }?timestamp=${Date.now()}`
-      );
+      const res_img = await fetch(
+        `http://192.168.254.135:8080/image/${activeLot.id}`
+      )
+      const data = await res_img.blob();
+      setImage(URL.createObjectURL(data));
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -80,7 +76,11 @@ const Home = ({ activeLot, setActiveLot }) => {
 
   return (
       <View className="flex-1 bg-white">
-        <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <Modal 
+          visible={modalVisible} 
+          animationType='slide'
+          transparent={true}
+          >
           <View className="flex-1 justify-center items-center">
             <View
               className="bg-white rounded-xl p-6 relative"
@@ -137,7 +137,7 @@ const Home = ({ activeLot, setActiveLot }) => {
             <Image
               className="w-full h-full"
               source={{
-                uri: imageURI,
+                uri: image,
               }}
               resizeMode="contain"
               alt="No Lot selected"
