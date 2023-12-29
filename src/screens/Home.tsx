@@ -101,8 +101,8 @@ const Home = ({ activeLot, setActiveLot }) => {
         className="h-1/3 bg-[#007aff] justify-center 
       rounded-t-2xl p-6"
         style={{
-          shadowOpacity: 0.4,
-          shadowRadius: 5,
+          shadowOpacity: 0.3,
+          shadowRadius: 3,
         }}
       >
         {/* Free spaces */}

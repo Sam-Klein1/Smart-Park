@@ -153,7 +153,7 @@ export default function SearchBar({
 
   return (
     <View className="p-6">
-      <View className="bg-white shadow-xl rounded-xl p-6">
+      <View className="bg-white rounded-xl p-6 shadow-xl" >
         <View className="flex-row space-x-2">
           <Text className="text-2xl">Find a lot</Text>
           <View className="justify-center">
