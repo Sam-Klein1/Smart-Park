@@ -17,9 +17,11 @@ const Settings = () => {
   const handleToggleDarkMode = (value: boolean) => {
     setDarkModeEnabled(value);
   };
+  
   const handleEmailLink = () => {
     Linking.openURL("mailto:parkingsmartsolutions@gmail.com");
   };
+
   const handleCallNumber = () => {
     Alert.alert(
       "Call Support",

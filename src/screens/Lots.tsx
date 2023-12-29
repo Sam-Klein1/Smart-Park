@@ -50,7 +50,7 @@ export default function Lots({ activeLot, setActiveLot }) {
 
         {/* My Lots */}
         <View className="p-4 flex-row">
-          <Text className="text-xl self-center font-bold">MY LOTS:</Text>
+          <Text className="text-xl self-center font-bold">My Lots:</Text>
           <View className="flex-1">
             <Text className="text-center text-xl font-bold">{activeLot?.name}</Text>
             {activeLot.id && (

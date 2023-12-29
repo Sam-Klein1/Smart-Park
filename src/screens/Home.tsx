@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, View, Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 // Timer component
 const Timer = ({ seconds }) => {
@@ -15,9 +16,11 @@ const Home = ({ activeLot, setActiveLot }) => {
   const [data, setData] = useState(null);
   const [secondsUntilUpdate, setSecondsUntilUpdate] = useState(10);
   const isMounted = useRef(false);
+  const navigation = useNavigation(); // Hook from React Navigation
 
-  const [imageURI, setImageURI] = useState(""); // initialize it to an empty string
-
+  const [imageURI, setImageURI] = useState(
+    `http://192.168.254.135:8080/image/${activeLot.id}`
+  ); // initialize it to an empty string
 
   const fetchData = async () => {
     if (activeLot.id === null) return;
@@ -68,47 +71,50 @@ const Home = ({ activeLot, setActiveLot }) => {
     };
   }, [activeLot]);
 
+  // Update tab bar header dynamically
+  useEffect(() => {
+    navigation.setOptions({
+      title: activeLot.name, // Assuming 'name' is the property containing the name of the activeLot
+    });
+  }, [activeLot, navigation]);
+
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-white">
       {/* Image */}
+      <View className="flex-1">
         <Image
-          className="w-full h-[45%]"
+          className="w-full h-full"
           source={{
             uri: imageURI,
           }}
           resizeMode="contain"
           alt="No Lot selected"
         />
+      </View>
+
+      <View className="p-4">
+        <Text className="text-center text-xl italic">{activeLot.location}</Text>
+      </View>
 
       {/* Data */}
-      <View className="flex-1 bg-white flex-row justify-center items-center space-x-12 rounded-tr-xl rounded-tl-xl">
-        {/* Total
-        <View>
-          <Text className="text-2xl text-center">{data?.total_spaces}</Text>
-          <Text>Total</Text>
-        </View> */}
-
+      <View className="h-1/3 bg-[#007aff] justify-center rounded-t-2xl shadow-lg p-6">
         {/* Free spaces */}
         <View>
-          <Text className="text-center text-8xl text-green-600">
-            {data?.free_spots.length}
-          </Text>
-          <Text className="text-2xl text-center">Spaces free!</Text>
+          {activeLot.id ? (
+            <>
+              <Text className="text-center text-8xl text-white">
+                {data?.free_spots.length}
+              </Text>
+              <Text className="text-2xl text-center text-white">
+                Spaces free!
+              </Text>
+            </>
+          ) : (
+            <Text className="text-center text-3xl text-orange-500">Pick a lot slut</Text>
+          )}
         </View>
-
-        {/* Taken spaces
-        <View>
-          <Text className="text-2xl text-center text-red-600">
-            {data?.occupied_spaces.length}
-          </Text>
-          <Text>Taken</Text>
-        </View> */}
-
-        {/* Timer */}
-        <Timer seconds={secondsUntilUpdate} />
-
-        {/*  */}
       </View>
+      <Timer seconds={secondsUntilUpdate} />
     </View>
   );
 };

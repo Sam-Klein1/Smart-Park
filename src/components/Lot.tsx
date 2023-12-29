@@ -48,9 +48,9 @@ export default function Lot({ lot, activeLot, setactiveLot, mylots, setlots }) {
       onPress={() => handleItemPress(lot)}
     >
       {activeLot && activeLot.id === lot?.id ? (
-        <Text className="text-xl self-center">🅿️</Text>
+        <Text className="text-xl self-center">🔘</Text>
       ) : (
-        <Text className="text-xl self-center">🅿</Text>
+        <Text className="text-xl self-center">⚪️</Text>
       )}
       <Text className="font-bold self-center">{lot?.name}</Text>
       <Text className="self-center">-</Text>

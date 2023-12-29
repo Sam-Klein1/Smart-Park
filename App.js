@@ -24,6 +24,7 @@ function MyTabs() {
 
     //weird bs for the icons
     <Tab.Navigator
+      initialRouteName="Lots"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color }) => {
           let iconName;

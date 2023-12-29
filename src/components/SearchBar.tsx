@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default function SearchBar({
   isSuggestionsVisible,
@@ -124,7 +125,7 @@ export default function SearchBar({
 
       // Save the updated string back to AsyncStorage
       await AsyncStorage.setItem("parkingLots", updatedParkingLotsString);
-    
+
       Alert.alert(
         "Lot Added!",
         "",
@@ -136,69 +137,78 @@ export default function SearchBar({
         ],
         { cancelable: false }
       );
-      setIsSuggestionsVisible(false)
+      setIsSuggestionsVisible(false);
       setlots(existingParkingLots);
       if (mylots.length <= 1) setActiveLot(selectedLot);
-      setSearchQuery("")
+      setSearchQuery("");
       setSelectedLot({
         id: null,
         name: "",
         location: "",
-      })
+      });
     } catch (error) {
       console.error("Error adding parking lot:", error);
     }
   };
 
   return (
-    <View className="p-8 bg-gray-200">
-      <Text className="mb-2 text-2xl">Find a lot</Text>
+    <View className="p-6 bg-gray-300">
+      <View className="z-10 bg-white shadow-md rounded-xl p-6">
+        
+        <Text className="mb-2 text-2xl">Find a lot</Text>
 
-      <View className="relative">
-        <TextInput
-          className="p-4 bg-white rounded"
-          placeholder="Enter lot ID or search for parking lots"
-          value={searchQuery}
-          onChangeText={(text) => setSearchQuery(text)}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-        <View className="relative bg-slate-500 rounded">
-          <Button title="+" color="#ffffff" onPress={addLot} />
-        </View>
-      </View>
-      {showDuplicateError && (
-        <Text className="relative text-red-600 text-center top-4">
-          Lot with the same ID has already been added
-        </Text>
-      )}
-      {isSuggestionsVisible && filteredParkingLots.length > 0 && (
-        <View className="p-4 bg-white rounded-b">
-          <FlatList
-            data={filteredParkingLots}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-              className="flex-row items-center py-1"
-                onPress={() => {
-                  setSearchQuery(`${item.id}`);
-                  setSelectedLot({
-                    id: item.id,
-                    name: item.name,
-                    location: item.location,
-                  });
-                }}
-              >
-                <View>
-                  <Text className="text-xl font-bold">{item.name}</Text>
-                  <Text className="text-base italic">{item.location}</Text>
-                </View>
-                <Text className="flex-1 text-right mr-6">ID: {item.id}</Text>
-              </TouchableOpacity>
-            )}
+        {/* Search bar */}
+        <View className="flex-row">
+        {/* <Icon name="search" size={20}/> */}
+          <TextInput
+            className="p-4 border border-gray-300 rounded w-5/6 rounded-r-none"
+            placeholder="Enter lot ID or search for lots"
+            value={searchQuery}
+            onChangeText={(text) => setSearchQuery(text)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
           />
+          <View className="bg-[#007aff] rounded p-1 flex-1 rounded-l-none justify-center">
+            <Button title="+" color="#ffffff" onPress={addLot} />
+          </View>
         </View>
-      )}
+
+        {showDuplicateError && (
+          <Text className="relative text-red-600 text-center top-4">
+            Lot with the same ID has already been added
+          </Text>
+        )}
+        
+        {isSuggestionsVisible && filteredParkingLots.length > 0 && (
+          <View className="p-4 bg-white rounded-b">
+            <FlatList
+              data={filteredParkingLots}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  className="flex-row items-center py-1"
+                  onPress={() => {
+                    setSearchQuery(`${item.id}`);
+                    setSelectedLot({
+                      id: item.id,
+                      name: item.name,
+                      location: item.location,
+                    });
+                  }}
+                >
+                  <View>
+                    <Text className="text-xl font-bold text-[#007aff]">
+                      {item.name}
+                    </Text>
+                    <Text className="text-base italic">{item.location}</Text>
+                  </View>
+                  <Text className="flex-1 text-right mr-6">ID: {item.id}</Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        )}
+      </View>
     </View>
   );
 }
