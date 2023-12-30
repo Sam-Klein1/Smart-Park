@@ -6,7 +6,6 @@ import {
   FlatList,
   Button,
   Alert,
-  TouchableOpacity,
   Pressable,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -64,10 +63,6 @@ export default function SearchBar({
     setIsSuggestionsVisible(true);
   };
 
-  const handleBlur = () => {
-    setIsSuggestionsVisible(false);
-  };
-
   const addLot = async () => {
     try {
       // Check if the selected lot exists in the database
@@ -121,7 +116,7 @@ export default function SearchBar({
       );
 
       // Append the new parking lot to the array
-      existingParkingLots.push({id: foundLot.id, name: foundLot.name, location: foundLot.location});
+      existingParkingLots.push({id: foundLot.id, name: foundLot.name, location: foundLot.location, hours: foundLot.hours});
 
       // Convert the updated array back to a string
       const updatedParkingLotsString = JSON.stringify(existingParkingLots);
@@ -143,7 +138,7 @@ export default function SearchBar({
 
       setIsSuggestionsVisible(false);
       setlots(existingParkingLots);
-      setActiveLot({id: foundLot.id, name: foundLot.name, location: foundLot.location});
+      setActiveLot({id: foundLot.id, name: foundLot.name, location: foundLot.location, hours: foundLot.hours});
       setSearchQuery("");
     } catch (error) {
       console.error("Error adding parking lot:", error);
@@ -167,8 +162,7 @@ export default function SearchBar({
             placeholder="Enter lot ID or search for lots"
             value={searchQuery}
             onChangeText={(text) => setSearchQuery(text)}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
+            onFocus={()=>setIsSuggestionsVisible(true)}
           />
           <View className="bg-[#007aff] rounded p-1 flex-1 rounded-l-none justify-center">
             <Button title="+" color="#ffffff" onPress={addLot} />
@@ -188,8 +182,8 @@ export default function SearchBar({
               keyExtractor={(item) => item?.id}
               renderItem={({ item }) => (
                 <Pressable
-                  className="flex-row items-center py-1 border"
-                  onPressOut={() => {
+                  className="flex-row items-center py-1"
+                  onPress={() => {
                     setSearchQuery(`${item.id}`);
                   }}
                 >

@@ -18,6 +18,7 @@ function MyTabs() {
     id: null,
     name: "",
     location: "",
+    hours: "",
   })
 
   return (

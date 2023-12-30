@@ -54,7 +54,7 @@ export default function Lot({ lot, activeLot, setactiveLot, mylots, setlots }) {
   return (
     <TouchableOpacity
       className={`p-4 flex-row space-x-4 bg-gray-200 ${
-        activeLot && activeLot.id === lot?.id ? "bg-gray-300" : ""
+        activeLot && activeLot.id === lot?.id ? "bg-blue-400" : ""
       }`}
       onPress={() => handleItemPress(lot)}
     >
