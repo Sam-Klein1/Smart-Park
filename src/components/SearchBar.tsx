@@ -7,6 +7,8 @@ import {
   Button,
   Alert,
   Pressable,
+  TouchableHighlight,
+  TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -41,6 +43,7 @@ export default function SearchBar({
     // Filter parking lots based on the search query
     const filteredLots = parkingLots.filter(
       (lot) =>
+        lot.id.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
         lot.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         lot.location.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -58,10 +61,6 @@ export default function SearchBar({
       return () => clearTimeout(timeoutId);
     }
   }, [showDuplicateError]);
-
-  const handleFocus = () => {
-    setIsSuggestionsVisible(true);
-  };
 
   const addLot = async () => {
     try {
@@ -164,9 +163,9 @@ export default function SearchBar({
             onChangeText={(text) => setSearchQuery(text)}
             onFocus={()=>setIsSuggestionsVisible(true)}
           />
-          <View className="bg-[#007aff] rounded p-1 flex-1 rounded-l-none justify-center">
-            <Button title="+" color="#ffffff" onPress={addLot} />
-          </View>
+          <TouchableOpacity onPress={addLot} className="bg-[#007aff] rounded p-1 flex-1 rounded-l-none justify-center items-center">
+            <Text className="text-white text-2xl">+</Text>
+          </TouchableOpacity>
         </View>
 
         {showDuplicateError && (

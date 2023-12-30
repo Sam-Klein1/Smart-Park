@@ -66,6 +66,7 @@ export default function Lot({ lot, activeLot, setactiveLot, mylots, setlots }) {
       <Text className="font-bold self-center">{lot?.name}</Text>
       <Text className="self-center">-</Text>
       <Text className="italic self-center">{lot?.location}</Text>
+      {}
       <View className="flex-1 self-center items-end">
         <Icon
           name="trash-outline"

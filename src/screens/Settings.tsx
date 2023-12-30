@@ -43,7 +43,7 @@ const Settings = () => {
   };
 
   return (
-    <View className="flex-1 p-6 flex-col space-y-6">
+    <View className="flex-1 p-6 flex-col justify-between">
       {/* Notifs */}
       <View>
         <Text className="text-lg font-bold">Notification Preferences</Text>
@@ -65,7 +65,7 @@ const Settings = () => {
         <View className="flex-row">
           <Text className="text-lg ">Use device settings</Text>
           <View className="flex-1 items-end">
-            <Switch value={notificationsEnabled} onValueChange={() => {}} />
+            {/* <Switch value={} onValueChange={() => {}} /> */}
           </View>
         </View>
         <Text className="text-sm pr-8 text-gray-400 mb-2">
@@ -97,7 +97,7 @@ const Settings = () => {
         <View className="flex-row">
           <Text className="text-lg ">Location Sharing</Text>
           <View className="flex-1 items-end">
-            <Switch value={notificationsEnabled} onValueChange={() => {}} />
+            {/* <Switch value={} onValueChange={() => {}} /> */}
           </View>
         </View>
         <Text className="text-sm pr-8 text-gray-400">
@@ -106,7 +106,7 @@ const Settings = () => {
       </View>
 
       {/* Contact Support */}
-      <View className="">
+      <View>
         <Text className="text-lg font-bold">Contact Support</Text>
         <TouchableOpacity className="flex-row" onPress={handleEmailLink}>
           <Text>Email: </Text>

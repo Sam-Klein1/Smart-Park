@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   Modal,
   Button,
+  Animated,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useFonts } from 'expo-font';
 
 const Home = ({ activeLot, setActiveLot }) => {
   const [data, setData] = useState(null);
@@ -17,14 +17,28 @@ const Home = ({ activeLot, setActiveLot }) => {
   const isMounted = useRef(false);
   const navigation = useNavigation(); // Hook from React Navigation
   const [modalVisible, setModalVisible] = useState(false);
-  const [fontsloaded] = useFonts({
-    'Oswald-Regular': require('../../assets/fonts/Oswald-Regular.ttf'),
-    'Oswald-Bold': require('../../assets/fonts/Oswald-Bold.ttf'),
-  })
 
   const [image, setImage] = useState(
     `http://192.168.254.135:8080/image/${activeLot.id}`
   ); // initialize it to an empty string
+
+  const rotateValue = useRef(new Animated.Value(0)).current;
+
+  const rotateRefresh = () => {
+    Animated.timing(rotateValue, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    }).start(() => {
+      // Reset the animated value after the animation completes
+      rotateValue.setValue(0);
+    });
+  };
+
+  const spin = rotateValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "720deg"],
+  });
 
   const fetchData = async () => {
     if (activeLot.id === null) return;
@@ -36,11 +50,11 @@ const Home = ({ activeLot, setActiveLot }) => {
       const result = await res_data.json();
       setData(result);
 
-      const res_img = await fetch(
-        `http://192.168.254.135:8080/image/${activeLot.id}`
-      );
-      const data = await res_img.blob();
-      setImage(URL.createObjectURL(data));
+      // const res_img = await fetch(
+      //   `http://192.168.254.135:8080/image/${activeLot.id}`
+      // );
+      // const data = await res_img.blob();
+      setImage(`http://192.168.254.135:8080/image/${activeLot.id}`);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -86,7 +100,7 @@ const Home = ({ activeLot, setActiveLot }) => {
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <View className="flex-1 justify-center items-center">
           <View
-            className="bg-white rounded-xl p-6 relative"
+            className="bg-white rounded-xl p-6 relative z-20"
             style={{
               shadowOffset: {
                 width: 0,
@@ -99,7 +113,7 @@ const Home = ({ activeLot, setActiveLot }) => {
           >
             <Text className="text-lg font-bold">Parking Hours:</Text>
             <Text>{activeLot.hours}</Text>
-            <View className="absolute right-0 top-[-8px]">
+            <View className="absolute right-1 top-[-4px]">
               <Button
                 title="x"
                 onPress={() => setModalVisible(!modalVisible)}
@@ -108,12 +122,15 @@ const Home = ({ activeLot, setActiveLot }) => {
           </View>
         </View>
       </Modal>
+
       {/* Top Bar */}
       <View className="flex-row justify-between">
         <View className="items-center p-4">
-          <TouchableOpacity onPress={fetchData}>
-            <Icon name="refresh" size={25} />
-          </TouchableOpacity>
+        <TouchableOpacity onPress={rotateRefresh}>
+        <Animated.View style={{ transform: [{ rotate: spin }] }}>
+          <Icon name="refresh" size={35}/>
+        </Animated.View>
+      </TouchableOpacity>
           <Text className="text-sm text-center">{secondsUntilUpdate}</Text>
         </View>
 
@@ -123,7 +140,7 @@ const Home = ({ activeLot, setActiveLot }) => {
           }}
           className="items-center p-4"
         >
-          <Icon name="information-circle-outline" size={25} />
+          <Icon name="information-circle-outline" size={35} />
         </TouchableOpacity>
       </View>
 
@@ -163,14 +180,24 @@ const Home = ({ activeLot, setActiveLot }) => {
           elevation: 5,
         }}
       >
-        <Image source={require('../../assets/logo.png')} className="absolute w-16 h-[90px] top-0 left-1"/>
+        <View className="absolute top-1 left-1 w-14 h-16">
+          <Image
+            source={require("../../assets/logo.png")}
+            className="w-full h-full"
+          />
+        </View>
+
+        <View className="absolute top-1 right-1 p-2">
+          <Text className="text-center text-xl">{data?.total_spaces}</Text>
+          <Text className="text-center text-lg">Total</Text>
+        </View>
         {/* Free spaces */}
         {activeLot.id ? (
           <View className="p-2">
-            <Text className="text-center text-white font-['Oswald-Bold'] text-[100px]">
-              43
+            <Text className="text-center text-white text-8xl font-bold">
+              {data?.free_spots.length}
             </Text>
-            <Text className="text-center text-4xl text-white" style={{fontFamily: 'Oswald-Regular'}}>Spaces Free</Text>
+            <Text className="text-center text-4xl text-white">Spaces Free</Text>
           </View>
         ) : (
           <TouchableOpacity
